@@ -238,6 +238,19 @@ bool Context::Initialize(JNIEnv* env,
 void Context::OnContextInitialized() {
   REQUIRE_UI_THREAD();
   temp_window_.reset(new TempWindow());
+
+    //----autofill fix 03.03.2025
+  CefRefPtr<CefRequestContext> rc = CefRequestContext::GetGlobalContext();
+  CefString err;
+  CefRefPtr<CefValue> off = CefValue::Create();
+  off->SetBool(false);
+  rc->SetPreference("autofill.credit_card_enabled", off.get(), err);
+  rc->SetPreference("autofill.profile_enabled", off.get(), err);
+  rc->SetPreference("autofill.save_data", off.get(), err);
+  rc->SetPreference("payments.can_make_payment_enabled", off.get(), err);
+  rc->SetPreference("search.suggest_enabled", off.get(), err);
+  rc->SetPreference("url_keyed_anonymized_data_collection.enabled", off.get(), err);
+  //
 }
 
 void Context::DoMessageLoopWork() {
